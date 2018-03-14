@@ -1,0 +1,173 @@
+<!DOCTYPE HTML>
+
+<html>
+	<head>
+		<title>Vanson Blog</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
+	</head>
+	<body>
+
+		<!-- Page Wrapper -->
+			<div id="page-wrapper">
+
+				<!-- Header -->
+					<header id="header">
+						<h1><a href="index.html">Home</a></h1>
+						<nav id="nav">
+							<ul>
+								<li class="special">
+									<a href="#menu" class="menuToggle"><span>Menu</span></a>
+									<div id="menu">
+										<ul>
+											<li><a href="index.html">Home</a></li>
+                                            <li><a href="game.html">Game</a></li>
+											<li><a href="blog.html">Blog</a></li>
+											<li><a href="life.html">Life</a></li>
+											<li><a href="about.html">About</a></li>
+										</ul>
+									</div>
+								</li>
+							</ul>
+						</nav>
+					</header>
+
+				<!-- Main -->
+					<article id="main">
+						<header>
+							<h2>unity 3d</h2>
+						</header>
+						<section class="wrapper style5">
+							<div class="inner">
+
+								
+							  <pre><b>//XML：存档和读档
+    private void SaveByXml()
+    {
+        Save save = CreateSaveGO();
+        //创建XML文件的存储路径
+        string filePath = Application.dataPath + "/StreamingFile" + "/byXML.txt";
+        //创建XML文档
+        XmlDocument xmlDoc = new XmlDocument();
+        //创建根节点，即最上层节点
+        XmlElement root = xmlDoc.CreateElement("save");
+        //设置根节点中的值
+        root.SetAttribute("name", "saveFile1");
+
+        //创建XmlElement
+        XmlElement target;
+        XmlElement targetPosition;
+        XmlElement monsterType;
+
+        //遍历save中存储的数据，将数据转换成XML格式
+        for(int i = 0; i < save.livingTargetPositions.Count; i++)
+        {
+            target = xmlDoc.CreateElement("target");
+            targetPosition = xmlDoc.CreateElement("targetPosition");
+            //设置InnerText值
+            targetPosition.InnerText = save.livingTargetPositions[i].ToString();
+            monsterType = xmlDoc.CreateElement("monsterType");
+            monsterType.InnerText = save.livingMonsterTypes[i].ToString();
+
+            //设置节点间的层级关系 root -- target -- (targetPosition, monsterType)
+            target.AppendChild(targetPosition);
+            target.AppendChild(monsterType);
+            root.AppendChild(target);
+        }
+
+        //设置射击数和分数节点并设置层级关系  xmlDoc -- root --(target-- (targetPosition, monsterType), shootNum, score)
+        XmlElement shootNum = xmlDoc.CreateElement("shootNum");
+        shootNum.InnerText = save.shootNum.ToString();
+        root.AppendChild(shootNum);
+
+        XmlElement score = xmlDoc.CreateElement("score");
+        score.InnerText = save.score.ToString();
+        root.AppendChild(score);
+
+        xmlDoc.AppendChild(root);
+        xmlDoc.Save(filePath);
+
+        if(File.Exists(Application.dataPath + "/StreamingFile" + "/byXML.txt"))
+        {
+            UIManager._instance.ShowMessage("保存成功");
+        }
+    }
+
+    private void LoadByXml()
+    {
+        string filePath = Application.dataPath + "/StreamingFile" + "/byXML.txt";
+        if(File.Exists(filePath))
+        {
+            Save save = new Save();
+            //加载XML文档
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.Load(filePath);
+
+            //通过节点名称来获取元素，结果为XmlNodeList类型
+            XmlNodeList targets = xmlDoc.GetElementsByTagName("target");
+            //遍历所有的target节点，并获得子节点和子节点的InnerText
+            if(targets.Count != 0)
+            {
+                foreach(XmlNode target in targets)
+                {
+                    XmlNode targetPosition = target.ChildNodes[0];
+                    int targetPositionIndex = int.Parse(targetPosition.InnerText);
+                    //把得到的值存储到save中
+                    save.livingTargetPositions.Add(targetPositionIndex);
+
+                    XmlNode monsterType = target.ChildNodes[1];
+                    int monsterTypeIndex = int.Parse(monsterType.InnerText);
+                    save.livingMonsterTypes.Add(monsterTypeIndex);
+                }
+            }
+            
+            //得到存储的射击数和分数
+            XmlNodeList shootNum = xmlDoc.GetElementsByTagName("shootNum");
+            int shootNumCount = int.Parse(shootNum[0].InnerText);
+            save.shootNum = shootNumCount;
+
+            XmlNodeList score = xmlDoc.GetElementsByTagName("score");
+            int scoreCount = int.Parse(score[0].InnerText);
+            save.score = scoreCount;
+
+        }
+        else
+        {
+            
+        }
+    }
+</b>    </pre>
+
+							</div>
+						</section>
+					</article>
+
+				<!-- Footer -->
+					<footer id="footer">
+						<ul class="icons">
+							<li><a class="icon fa-wechat"><span class="label">Wechat</span></a></li>
+							<li><a class="icon fa-envelope-o"><span class="label">Email</span></a></li>
+                            <li><a class="icon fa-music"><span class="label">Music</span></a></li>
+						</ul>
+						<ul class="copyright">
+							<li>Copyright &copy; 2018 Vanson</li>
+						</ul>
+					</footer>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/skel.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
